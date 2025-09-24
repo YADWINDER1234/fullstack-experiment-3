@@ -1,0 +1,93 @@
+app.jsx file :
+import React, { useState } from "react";
+
+function App() {
+  // Initial books
+  const [books, setBooks] = useState([
+    { title: "Atomic Habits", author: "James Clear" },
+    { title: "The Alchemist", author: "Paulo Coelho" },
+    { title: "Ikigai", author: "Héctor García & Francesc Miralles" },
+  ]);
+
+  const [search, setSearch] = useState(""); 
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+
+  // Filter by search
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(search.toLowerCase()) ||
+      book.author.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Add book
+  const addBook = (e) => {
+    e.preventDefault();
+    if (!newTitle.trim() || !newAuthor.trim()) return;
+    setBooks([...books, { title: newTitle, author: newAuthor }]);
+    setNewTitle("");
+    setNewAuthor("");
+  };
+
+  // Remove book
+  const removeBook = (index) => {
+    setBooks(books.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>📚 Library Management</h1>
+
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search by title or author..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{ margin: "10px 0", padding: "5px", width: "300px" }}
+      />
+
+      {/* Add Book Form */}
+      <form onSubmit={addBook} style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="Book Title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          style={{ marginRight: "5px", padding: "5px" }}
+        />
+        <input
+          type="text"
+          placeholder="Author"
+          value={newAuthor}
+          onChange={(e) => setNewAuthor(e.target.value)}
+          style={{ marginRight: "5px", padding: "5px" }}
+        />
+        <button type="submit" style={{ padding: "5px 10px" }}>
+          Add
+        </button>
+      </form>
+
+      {/* Book List */}
+      <ul>
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map((book, index) => (
+            <li key={index} style={{ marginBottom: "10px" }}>
+              <strong>{book.title}</strong> by {book.author}
+              <button
+                onClick={() => removeBook(index)}
+                style={{ color: "red", marginLeft: "10px" }}
+              >
+                Remove
+              </button>
+            </li>
+          ))
+        ) : (
+          <p>No books found</p>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
